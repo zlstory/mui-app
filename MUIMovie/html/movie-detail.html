@@ -1,0 +1,208 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/style.css" />
+		<style type="text/css">
+			.top-image-block {
+				text-align: center;
+				padding-top: 10px;
+				padding-bottom: 10px;
+				background-color: #3c3c3c
+			}
+			
+			.mui-bar-nav {
+				-webkit-box-shadow: none;
+				box-shadow: none;
+			}
+			
+			.mui-ellipsis-4 {
+				display: -webkit-box;
+				overflow: hidden;
+				white-space: normal !important;
+				text-overflow: ellipsis;
+				word-wrap: break-word;
+				-webkit-line-clamp: 4;
+				-webkit-box-orient: vertical;
+			}
+			
+			.comment-head-photo {
+				width: 30px;
+				height: 30px;
+				border-radius: 30px;
+			}
+			
+			.mui-table-view {
+				position: relative;
+				margin-top: 0;
+				margin-bottom: 0;
+				padding-left: 0;
+				list-style: none;
+				background-color: #EFEFF4;
+			}
+			
+			.mui-table-view:after {
+				position: absolute;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				height: 1px;
+				content: '';
+				-webkit-transform: scaleY(.5);
+				transform: scaleY(.5);
+				background-color: #c8c7cc;
+			}
+			
+			.mui-table-view:before {
+				position: absolute;
+				top: 0;
+				right: 0;
+				left: 0;
+				height: 0px;
+				content: '';
+				-webkit-transform: scaleY(.5);
+				transform: scaleY(.5);
+				background-color: #c8c7cc;
+			}
+			
+			.mui-table-view:before {
+				top: -1px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">电影</h1>
+		</header>
+		<div id="content" class="mui-content" style="background: #fff;">
+			<div class="top-image-block">
+				<img :src="cover" style="width: 160px;height: 240px;vertical-align: top;" />
+			</div>
+			<div style="padding: 15px;height: 90px;">
+				<div style="float: left;">
+					<span class="dark-big" style="display: block;">{{title}}</span>
+					<span class="gray-small" style="display: block;">{{year}} / {{countries.toString().replace('/,/g',' / ')}} / {{genres.toString().replace('/,/g',' / ')}} </span>
+					<span class="gray-small" style="display: block;">{{directors.length>0?directors[0].name:''}}导演作品</span>
+				</div>
+				<div style="width: 60px;height: 60px;background: white;float: right;text-align: center;box-shadow: 0px 0px 10px #AAAAAA;">
+					<span class="gray-micro" style="display: block;vertical-align: middle;margin-top: 5px;line-height: 15px;">豆瓣评分</span>
+					<span class="dark-big" style="display: block;line-height: 20px;" v-if="score>0">{{score}}</span>
+					<span class="dark-big" style="display: block;line-height: 20px;" v-else>暂无评分</span>
+					<span class="gray-micro" style="display: block;line-height: 15px;">{{ratingCount}}人</span>
+				</div>
+			</div>
+			<div style="height: 0.5px;background: #A2A2A2;margin-left: 15px;"></div>
+			<p class="gray-small" style="margin: 10px 0 0 15px;">剧情简介</p>
+			<p class="dark-medium mui-ellipsis-4" style="margin: 0 15px;">{{summary}}</p>
+
+			<p class="gray-small" style="margin: 10px 0 0 15px;">演员</p>
+			<div style="overflow-x: hidden;white-space: nowrap;padding-left: 15px;">
+				<div v-for="item in casts" style="display: inline-block;" @click="open_detail(item)">
+					<img :src="item.avatars.medium" alt="" style="width: 70px;height: 100px;margin-right: 10px;" />
+					<div class="dark-micro mui-ellipsis" style="text-align: center;">{{item.name}}</div>
+				</div>
+			</div>
+			<p class="dark-medium" style="margin-top: 10px;text-align: center;background: #E6E6E6;line-height: 40px;">评论</p>
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell">
+					<img src="../images/icon_commentphoto.jpg" class="comment-head-photo mui-pull-left" />
+					<div>
+						<span class="dark-medium" style="line-height: 30px;margin-left: 30px;text-align: center;margin-left: 10px;">hello world</span>
+						<span class="gray-medium" style="line-height: 30px;text-align: center;float: right;">2017-01-01</span>
+					</div>
+					<p class="dark-medium" style="margin-left: 40px;">哈哈哈恍恍惚惚恍恍惚惚</p>
+
+				</li>
+
+			</ul>
+		</div>
+
+		<script src="../js/mui.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>	
+		<script type="text/javascript">
+			mui.init()
+
+			//默认数据
+			function getDefaultData() {
+				return {
+					title: '',
+					cover: '',
+					score: '',
+					ratingCount: '',
+					summary: '',
+					countries: '',
+					year: '',
+					genres: '',
+					casts: [],
+					directors: []
+				}
+			}
+
+			//获取接口
+			var data_detail = new Vue({
+				el: "#content",
+				data: getDefaultData(),
+				methods: {
+					resetData:function(){
+						Object.assign(this.$data,getDefaultData())
+					},
+					open_detail:function(item){
+						//打开演员详情页面
+						mui.openWindow({
+							id:'cast-detail',
+							url:'./cast-detail.html',
+							extras:{
+								castId:item.id
+							}
+						})
+					}
+				}
+			});
+			
+			mui.plusReady(function(){
+				var self = plus.webview.currentWebview();
+				//添加hide事件，清空页面数据，滚到最顶部
+				self.addEventListener('hide',function(e){
+					window.scrollTo(0,0);
+					data_detail.resetData();
+				},false);
+			});
+			
+
+			//添加movieId自定义事件
+			window.addEventListener("movieId", function() {
+
+				//获取事件参数
+				var id = event.detail.id;
+				plus.nativeUI.showWaiting("加载中",{
+					width:'100px',
+					height:'100px'
+				});
+				//根据id请求详情数据
+				mui.getJSON('https://api.douban.com/v2/movie/subject/'+id,function(res){
+					data_detail.title = res.title;
+					data_detail.cover = res.images.large;
+					data_detail.score = res.rating.average;
+					data_detail.ratingCount = res.ratings_count;
+					data_detail.summary = res.summary;
+					data_detail.countries = res.countries.toString().replace('/,/g',' / ');
+					data_detail.year = res.year;
+					data_detail.genres = res.genres.toString().replace('/,/g',' / ');
+					data_detail.casts = res.casts;
+					data_detail.directors = res.directors;
+					plus.nativeUI.closeWaiting();//取消加载中
+				})
+			});
+			
+			
+			
+		</script>
+	</body>
+
+</html>
