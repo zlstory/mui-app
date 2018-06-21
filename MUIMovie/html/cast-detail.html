@@ -22,20 +22,20 @@
 		</header>
 		<div class="mui-content">
 			<div class="top-image-block">
-				<img src="" style="width:160px;height:240px;vertival-align:top;"/>
+				<img :src="cover" style="width:160px;height:240px;vertival-align:top;"/>
 			</div>
 			<div style="padding: 15px;">
-				<div class="dark-big">中文名</div>
-				<div class="gray-medium">English Name</div>
+				<div class="dark-big">{{name}}</div>
+				<div class="gray-medium">{{enName}}</div>
 				<div class="gray-small">个人简介</div>
-				<div class="dark-medium">个人简介详情</div>
+				<div class="dark-medium">{{summary}}</div>
 			</div>
 			<div class="gray-small" style="padding-left: 15px;">代表作品</div>
 			<div style="overflow-x: scroll;white-space: nowrap;padding-left: 15px;">
-				<div style="display: inline-block;">
-					<img src="" style="width: 70px;height: 100px;margin-right: 10px;" alt="" />
-					<div class="dark-micro mui-ellipsis" style="width: 70px;text-align: center;">作品名称</div>
-					<div class="orange-small mui-ellipsis" style="width: 70px;text-align: center;line-height: 15px;">9.0分</div>
+				<div v-for = "item in works" style="display: inline-block;">
+					<img :src="item.subject.images.medium" style="width: 70px;height: 100px;margin-right: 10px;" alt="" />
+					<div class="dark-micro mui-ellipsis" style="width: 70px;text-align: center;">{{item.subject.title}}</div>
+					<div class="orange-small mui-ellipsis" style="width: 70px;text-align: center;line-height: 15px;">{{item.subject.rating.average}}分</div>
 				</div>
 			</div>
 		</div>
@@ -67,12 +67,29 @@
 			
 			mui.plusReady(function(){
 				var self = plus.webview.currentWebview();
-				//console.log(self.castId)//castId是从父页面传进来的值
+				//添加hide事件，清空页面数据，滚到最顶部
+				self.addEventListener('hide',function(e){
+					window.scrollTo(0,0);
+					data_detail.resetData();
+				},false);
+			
+				//loading效果
+				plus.nativeUI.showWaiting('正在加载',{
+					width:"100px",
+					height:"100px"
+				});
 				
-				mui.getJSON('https://api.douban.com/v2/movie/celebrity/'+self.castId,function(){
+				console.log(self.castId)//castId是从父页面传进来的值
+				//接口数据
+				mui.getJSON('https://api.douban.com/v2/movie/celebrity/'+self.castId,function(res){
+
 					data_detail.name = res.name;
 					data_detail.enName = res.name_en;
 					data_detail.cover = res.avatars.large;
+					data_detail.summary = res.name+''+res.gender+''+res.born_place;
+					data_detail.works = res.works;
+					
+					plus.nativeUI.closeWaiting();
 					
 				})
 				

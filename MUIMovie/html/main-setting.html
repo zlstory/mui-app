@@ -1,31 +1,61 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
 
 	<head>
-		<meta charset="utf-8">
-		<title>Hello MUI</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
-		<meta name="apple-mobile-web-app-capable" content="yes">
-		<meta name="apple-mobile-web-app-status-bar-style" content="black">
-
-		<link rel="stylesheet" href="../css/mui.min.css">
-		<style>
-			html,body {
-				background-color: #fff;
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/style.css" />
+		<style type="text/css">
+			body {
+				background: white;
 			}
-			
 		</style>
 	</head>
 
 	<body>
+		<header class="mui-bar mui-bar-nav">
+			<h1 class="mui-title">设置</h1>
+		</header>
 		<div class="mui-content">
-			
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right dark-big">意见反馈</a>
+				</li>
+				<li id="cache" class="mui-table-view-cell">
+					<a class="mui-navigate-right dark-big">清除缓存</a>
+				</li>
+				<li id="about" class="mui-table-view-cell">
+					<a class="mui-navigate-right dark-big">关于我们</a>
+				</li>
+			</ul>
 		</div>
+
+		<script src="../js/mui.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+
+		<script type="text/javascript">
+			mui.init();
+
+			//给about节点添加点击事件
+
+			document.getElementById('about').addEventListener('tap', function() {
+				//打开about.html
+				mui.openWindow({
+					id:"about",
+					url:"./about.html"
+				})
+			})
+
+			mui.plusReady(function() {
+				document.getElementById('cache').addEventListener('tap', function() {
+					plus.cache.clear(function() {
+						mui.toast("清除缓存成功");
+					})
+				})
+			})
+		</script>
 	</body>
-	<script src="../js/mui.min.js"></script>
-	<script>
-		mui.init({
-			swipeBack:true //启用右滑关闭功能
-		});
-	</script>
-</html> 
+
+</html>

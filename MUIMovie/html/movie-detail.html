@@ -93,7 +93,7 @@
 				<div style="width: 60px;height: 60px;background: white;float: right;text-align: center;box-shadow: 0px 0px 10px #AAAAAA;">
 					<span class="gray-micro" style="display: block;vertical-align: middle;margin-top: 5px;line-height: 15px;">豆瓣评分</span>
 					<span class="dark-big" style="display: block;line-height: 20px;" v-if="score>0">{{score}}</span>
-					<span class="dark-big" style="display: block;line-height: 20px;" v-else>暂无评分</span>
+					<span class="dark-medium" style="display: block;line-height: 20px;" v-else>暂无评分</span>
 					<span class="gray-micro" style="display: block;line-height: 15px;">{{ratingCount}}人</span>
 				</div>
 			</div>
@@ -116,7 +116,7 @@
 						<span class="dark-medium" style="line-height: 30px;margin-left: 30px;text-align: center;margin-left: 10px;">hello world</span>
 						<span class="gray-medium" style="line-height: 30px;text-align: center;float: right;">2017-01-01</span>
 					</div>
-					<p class="dark-medium" style="margin-left: 40px;">哈哈哈恍恍惚惚恍恍惚惚</p>
+					<!--<p class="dark-medium" style="margin-left: 40px;">哈哈哈恍恍惚惚恍恍惚惚</p>-->
 
 				</li>
 
@@ -172,6 +172,7 @@
 					window.scrollTo(0,0);
 					data_detail.resetData();
 				},false);
+				
 			});
 			
 
@@ -184,6 +185,7 @@
 					width:'100px',
 					height:'100px'
 				});
+				console.log(id)
 				//根据id请求详情数据
 				mui.getJSON('https://api.douban.com/v2/movie/subject/'+id,function(res){
 					data_detail.title = res.title;
